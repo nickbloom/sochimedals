@@ -1,0 +1,26 @@
+
+###### Current US Team Medal Breakdown by Gender
+## Last Updated: `r as.character(format(Sys.time(), format="%B %d, %Y at %H:%M"))`
+
+
+
+```{r,echo=FALSE,message=FALSE,fig.cap="",dpi=150,fig.width=7,dev='png'}
+library(ggplot2)
+library(reshape2)
+
+men<-read.csv("~/Transporter/nick/scripts/sochi/medals/men.csv", header = TRUE, sep = ",", dec=".", na.strings="")
+women<-read.csv("~/Transporter/nick/scripts/sochi/medals/women.csv", header = TRUE, sep = ",", dec=".", na.strings="")
+
+togerr<-rbind(men,women)
+rownames(togerr)<-c("men", "women")
+
+togerr$gender<-rownames(togerr)
+tog.melted<-melt(togerr, id="gender")
+colnames(tog.melted)<-c('gender', 'medal', 'value')
+Colors = c("#5C87C4","#D389B5")
+
+
+medals<-ggplot(tog.melted)
+medals<-medals+geom_bar(aes(x=medal,y=factor(value),fill=gender,group=gender),stat="identity",position="dodge") + scale_fill_manual(values=Colors) + theme_bw() + ylab("Number of Medals")  + xlab("Medal")
+medals
+```
